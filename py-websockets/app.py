@@ -3,6 +3,7 @@ import websockets
 
 connected = set()
 
+
 async def server(websocket, path):
     # Register.
     connected.add(websocket)
@@ -10,13 +11,14 @@ async def server(websocket, path):
         async for message in websocket:
             for conn in connected:
                 if conn != websocket:
-                    await conn.send(f'Got a new MSG FOR YOU: {message}')
+                    await conn.send(f'{message}')
+
     finally:
         # Unregister.
         connected.remove(websocket)
-    
 
-start_server = websockets.serve(server, "localhost", 5000)
+
+start_server = websockets.serve(server, "wss://websockets-echohamza.herokuapp.com/", 8000)
 
 asyncio.get_event_loop().run_until_complete(start_server)
 asyncio.get_event_loop().run_forever()
